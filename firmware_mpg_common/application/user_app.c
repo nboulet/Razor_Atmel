@@ -88,6 +88,20 @@ Promises:
 */
 void UserAppInitialize(void)
 {
+  //All discrete LEDs off
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
+  
+  //Backlight to white
+  LedOn(LCD_RED);
+  LedOn(LCD_GREEN);
+  LedOn(LCD_BLUE);
   
   /* If good initialization, set state to Idle */
   if( 1 )
@@ -137,7 +151,13 @@ State Machine Function Definitions
 /* Wait for a message to be queued */
 static void UserAppSM_Idle(void)
 {
-    
+  static u8 u8Counter = 0;
+  static u16 u16BlinkCount;
+  
+  u16BlinkCount++;  
+  if(u16BlinkCount == 250)
+  {
+    u16BlinkCount = 0;
 } /* end UserAppSM_Idle() */
      
 
