@@ -46,6 +46,13 @@ volatile u32 G_u32UserAppFlags;                       /* Global state flags */
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
+s
+extern AntSetupDataType G_stAntSetupData;                         /* From ant.c */
+
+extern u32 G_u32AntApiCurrentDataTimeStamp;                       /* From ant_api.c */
+extern AntApplicationMessageType G_eAntApiCurrentMessageClass;    /* From ant_api.c */
+extern u8 G_au8AntApiCurrentData[ANT_APPLICATION_MESSAGE_BYTES];  /* From ant_api.c */
+
 extern volatile u32 G_u32SystemFlags;                  /* From main.c */
 extern volatile u32 G_u32ApplicationFlags;             /* From main.c */
 
@@ -88,10 +95,21 @@ Promises:
 */
 void UserAppInitialize(void)
 {
-  
+  /* Configure ANT for this application */
+  G_stAntSetupData.AntChannelType      = ANT_CHANNEL_TYPE_USERAPP;
+  G_stAntSetupData.AntChannel          = ANT_CHANNEL_USERAPP;
+  G_stAntSetupData.AntSerialLo         = ANT_SERIAL_LO_USERAPP;
+  G_stAntSetupData.AntSerialHi         = ANT_SERIAL_HI_USERAPP;
+  G_stAntSetupData.AntDeviceType       = ANT_DEVICE_TYPE_USERAPP;
+  G_stAntSetupData.AntTransmissionType = ANT_TRANSMISSION_TYPE_USERAPP;
+  G_stAntSetupData.AntChannelPeriodLo  = ANT_CHANNEL_PERIOD_LO_USERAPP;
+  G_stAntSetupData.AntChannelPeriodHi  = ANT_CHANNEL_PERIOD_HI_USERAPP;
+  G_stAntSetupData.AntFrequency        = ANT_FREQUENCY_USERAPP;
+  G_stAntSetupData.AntTxPower          = ANT_TX_POWER_USERAPP;
   /* If good initialization, set state to Idle */
-  if( 1 )
+  if( AntChannelConfig(ANT_MASTER) )
   {
+    AntOpenChannel();
     UserApp_StateMachine = UserAppSM_Idle;
   }
   else
