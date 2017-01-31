@@ -155,6 +155,7 @@ State Machine Function Definitions
 static void UserAppSM_Idle(void)
 {
   static u8 au8TestMessage[] = {0, 0, 0, 0, 0xA5, 0, 0, 0};
+  u8 au8DataContent[] = "xxxxxxxxxxxxxxxx";
   
   if( AntReadData() )
   {
@@ -162,6 +163,12 @@ static void UserAppSM_Idle(void)
     if(G_eAntApiCurrentMessageClass == ANT_DATA)
     {
       /* Wooo data recieved */
+      for(u8 i = 0; i < ANT_DATA_BYTES; i++)
+      {
+        au8DataContent[2 * i]     = HexToASCIICharUpper(G_au8AntApiCurrentData[i] / 16);
+        au8DataContent[2 * i + 1] = HexToASCIICharUpper(G_au8AntApiCurrentData[i] % 16);
+      }
+      LCDMessage(LINE2_START_ADDR, au8DataContent);
     }
     else if(G_eAntApiCurrentMessageClass == ANT_TICK)
     {
